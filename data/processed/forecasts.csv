@@ -1,0 +1,19 @@
+ds,yhat,method,window,alpha
+2018-09-30,7038.0,Moving Average,3.0,
+2018-10-31,7048.0,Moving Average,3.0,
+2018-11-30,7076.0,Moving Average,3.0,
+2018-12-31,7054.0,Moving Average,3.0,
+2019-01-31,7059.0,Moving Average,3.0,
+2019-02-28,7063.0,Moving Average,3.0,
+2018-09-30,7204.0,Exponential Smoothing,,0.3
+2018-10-31,7204.0,Exponential Smoothing,,0.3
+2018-11-30,7204.0,Exponential Smoothing,,0.3
+2018-12-31,7204.0,Exponential Smoothing,,0.3
+2019-01-31,7204.0,Exponential Smoothing,,0.3
+2019-02-28,7204.0,Exponential Smoothing,,0.3
+2018-09-30,22113.0,Prophet,,
+2018-10-31,13911.0,Prophet,,
+2018-11-30,8332.0,Prophet,,
+2018-12-31,6762.0,Prophet,,
+2019-01-31,18823.0,Prophet,,
+2019-02-28,16205.0,Prophet,,

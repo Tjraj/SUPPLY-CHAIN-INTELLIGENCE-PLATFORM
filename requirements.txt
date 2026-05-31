@@ -1,0 +1,12 @@
+﻿pandas
+numpy
+streamlit
+plotly
+scikit-learn
+duckdb
+fpdf2
+boto3
+openai
+openpyxl
+statsmodels
+sqlalchemy
