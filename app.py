@@ -1092,8 +1092,7 @@ def page_anomalies():
         st.dataframe(top_anom, use_container_width=True)
 
     else:
-        from sklearn.ensemble import IsolationForest
-
+        
         num_cols     = df.select_dtypes(include="number").columns.tolist()
         feature_cols = [c for c in ["price","freight_value","delivery_days",
                                     "total_order_value","payment_value"] if c in num_cols]
@@ -1356,8 +1355,8 @@ def page_ai_report():
         with st.spinner("Calling OpenRouter AI..."):
             try:
                 from dotenv import load_dotenv
+                import requests
                 load_dotenv()
-                # Works locally (.env) AND on Streamlit Cloud (secrets)
                 try:
                     api_key = st.secrets["OPENROUTER_API_KEY"]
                 except Exception:
@@ -1366,8 +1365,6 @@ def page_ai_report():
                     st.error("❌ OPENROUTER_API_KEY not found in .env or Streamlit secrets")
                     st.code("OPENROUTER_API_KEY=sk-or-xxxxxxxxxxxx", language="bash")
                     return
-
-                import requests
                 prompt = f"""You are a senior supply chain analyst writing for C-suite executives.
 Write a professional {report_type} based on the following KPI data.
 {tone_instructions[tone]}
@@ -1396,7 +1393,6 @@ Structure:
                                      headers=headers, json=payload, timeout=60)
                 resp.raise_for_status()
                 data = resp.json()
-
                 if "choices" in data and data["choices"]:
                     st.session_state["ai_report"]      = data["choices"][0]["message"]["content"]
                     st.session_state["ai_report_type"] = report_type
@@ -1407,14 +1403,12 @@ Structure:
                     st.info("Try a different model or wait 30s if rate limited.")
                 else:
                     st.error("❌ Unexpected response"); st.json(data)
-
             except Exception as e:
                 st.error(f"❌ {type(e).__name__}: {e}")
 
     if "ai_report" in st.session_state:
         section_header("03", "Generated Report")
         rtype = st.session_state.get("ai_report_type", "Report")
-
         st.markdown(f"""
         <div style="background:#1a1f2e;border:1px solid #1e2535;border-radius:10px;
                     padding:1.6rem 2rem;line-height:1.7;color:#cbd5e1;font-size:0.9rem;">
@@ -1425,7 +1419,6 @@ Structure:
         section_header("04", "Export")
         report_md = f"# Supply Chain {rtype}\n\n{kpis}\n\n---\n\n{st.session_state['ai_report']}"
         col1, col2, col3, col4 = st.columns(4)
-
         with col1:
             st.download_button("📄  .txt", data=st.session_state["ai_report"],
                                file_name="supply_chain_report.txt", mime="text/plain",
@@ -1452,14 +1445,12 @@ Structure:
             if st.button("🔄  Regenerate", use_container_width=True):
                 for k in ["ai_report","pdf_bytes"]: st.session_state.pop(k, None)
                 st.rerun()
-
         if "pdf_bytes" in st.session_state:
             st.download_button("⬇️  Download PDF Report",
                                data=st.session_state["pdf_bytes"],
                                file_name="supply_chain_report.pdf",
                                mime="application/pdf",
                                use_container_width=True, type="primary")
-
 
 
 # ── MAIN ───────────────────────────────────────────────────────────────────────
