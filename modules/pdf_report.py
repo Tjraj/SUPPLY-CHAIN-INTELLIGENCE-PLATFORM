@@ -313,7 +313,7 @@ def generate_pdf_report(
 
     # ── AI narrative page ─────────────────────────────────────────────────────
     pdf.add_page()
-    pdf.section_heading(f"AI Analysis — {report_type}")
+    pdf.section_heading(f"AI Generated Analysis")
     if ai_text:
         pdf.ai_report_section(ai_text)
     else:
