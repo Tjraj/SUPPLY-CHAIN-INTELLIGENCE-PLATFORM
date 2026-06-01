@@ -1121,6 +1121,7 @@ def page_anomalies():
         df_model = df[feature_cols].fillna(df[feature_cols].median())
 
         progress.progress(35, text="Initialising Isolation Forest model...")
+        from sklearn.ensemble import IsolationForest
         iso = IsolationForest(n_estimators=100, contamination=0.05,
                               random_state=42, n_jobs=-1)
 
