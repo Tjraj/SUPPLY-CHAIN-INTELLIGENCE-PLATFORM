@@ -481,14 +481,23 @@ def show_column_mapper(df_raw):
 
 
 # ── DATA LOADERS ───────────────────────────────────────────────────────────────
-def get_active_df():
-    if "mapped_df" in st.session_state and st.session_state["mapped_df"] is not None:
-        return st.session_state["mapped_df"]
+@st.cache_data(show_spinner=False)
+def _load_olist():
+    """Load and cache Olist dataset — runs once, cached for all users."""
     try:
-        return pd.read_csv("data/processed/orders_delivered.csv",
-                           parse_dates=["order_purchase_timestamp"])
+        return pd.read_csv(
+            "data/processed/orders_delivered.csv",
+            parse_dates=["order_purchase_timestamp"]
+        )
     except FileNotFoundError:
         return None
+
+def get_active_df():
+    # Return custom uploaded dataset if present
+    if "mapped_df" in st.session_state and st.session_state["mapped_df"] is not None:
+        return st.session_state["mapped_df"]
+    # Load Olist with caching — fast for all pages, all users
+    return _load_olist()
 
 
 def load_analytics():
@@ -663,7 +672,13 @@ def page_setup():
                                     label_visibility="collapsed")
         if uploaded:
             try:
-                df_raw = pd.read_csv(uploaded)
+                import io
+                bytes_data = uploaded.read()
+                # Try UTF-8 first, fallback to latin-1 to handle encoding issues
+                try:
+                    df_raw = pd.read_csv(io.BytesIO(bytes_data), encoding="utf-8")
+                except UnicodeDecodeError:
+                    df_raw = pd.read_csv(io.BytesIO(bytes_data), encoding="latin-1")
                 if st.session_state.get("dataset_name") != uploaded.name:
                     st.session_state["uploaded_df"]  = df_raw
                     st.session_state["dataset_name"] = uploaded.name
@@ -1456,6 +1471,21 @@ Structure:
 
 # ── MAIN ───────────────────────────────────────────────────────────────────────
 def main():
+    # Initialize all session state keys on first load
+    # This prevents "SessionInfo not initialized" errors on Streamlit Cloud
+    defaults = {
+        "mapped_df"      : None,
+        "uploaded_df"    : None,
+        "mapping"        : None,
+        "dataset_name"   : None,
+        "ai_report"      : None,
+        "ai_report_type" : None,
+        "pdf_bytes"      : None,
+    }
+    for key, val in defaults.items():
+        if key not in st.session_state:
+            st.session_state[key] = val
+
     page = render_sidebar()
     if   page == "📁  Setup & Data Upload":     page_setup()
     elif page == "📊  Executive KPI Dashboard": page_kpi_dashboard()
