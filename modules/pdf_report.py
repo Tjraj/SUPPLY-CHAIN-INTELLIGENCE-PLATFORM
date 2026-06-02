@@ -41,7 +41,7 @@ class SupplyChainPDF(FPDF):
         super().__init__()
         self.report_title  = _safe(title)
         self.dataset_name  = _safe(dataset_name)
-        self.generated_at  = datetime.now().strftime("%B %d, %Y  %H:%M")
+        self.generated_at  = datetime.now().strftime("%B %d, %Y")
         self.set_auto_page_break(auto=True, margin=20)
         self.set_margins(20, 20, 20)
 
@@ -336,7 +336,7 @@ def generate_pdf_report(
         f"Dataset: {dataset_name}",
         f"Total rows: {len(df):,}",
         f"Columns: {df.shape[1]}",
-        f"Report generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+        f"Report generated: {datetime.now().strftime('%B %d, %Y')}",
     ])
 
     return bytes(pdf.output())
