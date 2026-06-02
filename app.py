@@ -1409,7 +1409,7 @@ Structure:
 
     if "ai_report" in st.session_state:
         section_header("03", "Generated Report")
-        rtype = st.session_state.get("ai_report_type", "Report")
+        rtype = report_type
         st.markdown(f"""
         <div style="background:#1a1f2e;border:1px solid #1e2535;border-radius:10px;
                     padding:1.6rem 2rem;line-height:1.7;color:#cbd5e1;font-size:0.9rem;">
