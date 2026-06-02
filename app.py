@@ -1423,7 +1423,7 @@ Structure:
             except Exception as e:
                 st.error(f"❌ {type(e).__name__}: {e}")
 
-    if "ai_report" in st.session_state:
+    if st.session_state.get("ai_report") is not None:
         section_header("03", "Generated Report")
         rtype = report_type
         st.markdown(f"""
