@@ -690,8 +690,9 @@ def page_setup():
             except Exception as e:
                 st.error(f"❌ {e}")
 
-    if "uploaded_df" in st.session_state and (
-        "mapped_df" not in st.session_state or st.session_state["mapped_df"] is None
+    if (
+        st.session_state.get("uploaded_df") is not None
+        and st.session_state.get("mapped_df") is None
     ):
         show_column_mapper(st.session_state["uploaded_df"])
 
